@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/api";
+import "../App.css";
 
 function Medicines({ onNavigate }) {
   const [medicines, setMedicines] = useState([]);
@@ -27,10 +28,6 @@ function Medicines({ onNavigate }) {
     minimum_stock: 10,
     schedule_type: "OTC",
   });
-
-  // =========================
-  // MEDICINE TYPES
-  // =========================
 
   const medicineTypes = [
     "Tablet",
@@ -230,16 +227,13 @@ function Medicines({ onNavigate }) {
         brand_name:
           formData.brand_name.trim() || null,
 
-        // Actual medicine category
         category_id: Number(
           formData.category_id
         ),
 
-        // Medicine form/type
         medicine_type:
           formData.medicine_type,
 
-        // Physical drawer
         drawer:
           formData.drawer.trim(),
 
@@ -282,7 +276,6 @@ function Medicines({ onNavigate }) {
         "Medicine added successfully."
       );
 
-      // Reset form
       setFormData({
         name: "",
         generic_name: "",
@@ -374,7 +367,6 @@ function Medicines({ onNavigate }) {
         <div className="add-medicine-card">
 
           <div className="form-header">
-
             <div>
               <h3>
                 Add New Medicine
@@ -394,7 +386,6 @@ function Medicines({ onNavigate }) {
             >
               ×
             </button>
-
           </div>
 
           <form
@@ -405,12 +396,7 @@ function Medicines({ onNavigate }) {
 
             <div className="medicine-form-grid">
 
-              {/* =========================
-                  MEDICINE NAME
-              ========================= */}
-
               <div className="form-group">
-
                 <label>
                   Medicine Name *
                 </label>
@@ -426,15 +412,9 @@ function Medicines({ onNavigate }) {
                   }
                   required
                 />
-
               </div>
 
-              {/* =========================
-                  GENERIC NAME
-              ========================= */}
-
               <div className="form-group">
-
                 <label>
                   Generic Name *
                 </label>
@@ -912,55 +892,44 @@ function Medicines({ onNavigate }) {
                 <table className="medicine-table">
 
                   <thead>
-
                     <tr>
 
-                      <th>
-                        Name
+                      <th>Name</th>
+
+                      <th>Generic</th>
+
+                      <th>Brand</th>
+
+                      <th>Type</th>
+
+                      <th>Category</th>
+
+                      <th>Drawer</th>
+
+                      <th>Batch</th>
+
+                      <th>Stock</th>
+
+                      {/* SELLING PRICE */}
+                      <th className="price-column selling-price-header">
+                        Selling Price
                       </th>
 
-                      <th>
-                        Generic
-                      </th>
-
-                      <th>
-                        Brand
-                      </th>
-
-                      <th>
-                        Type
-                      </th>
-
-                      <th>
-                        Category
-                      </th>
-
-                      <th>
-                        Drawer
-                      </th>
-
-                      <th>
-                        Batch
-                      </th>
-
-                      <th>
-                        Stock
-                      </th>
-
-                      <th>
+                      {/* MRP */}
+                      <th className="price-column mrp-header">
                         MRP
                       </th>
 
-                      <th>
-                        Expiry
+                      {/* PURCHASE PRICE */}
+                      <th className="price-column purchase-price-header">
+                        Purchase Price
                       </th>
 
-                      <th>
-                        Action
-                      </th>
+                      <th>Expiry</th>
+
+                      <th>Action</th>
 
                     </tr>
-
                   </thead>
 
                   <tbody>
@@ -1011,10 +980,7 @@ function Medicines({ onNavigate }) {
                                 "-"
                               }
                             </span>
-
                           </td>
-
-                          {/* CATEGORY */}
 
                           <td>
                             {
@@ -1024,10 +990,7 @@ function Medicines({ onNavigate }) {
                             }
                           </td>
 
-                          {/* DRAWER */}
-
                           <td>
-
                             <span className="drawer-badge">
                               📦{" "}
                               {
@@ -1035,10 +998,7 @@ function Medicines({ onNavigate }) {
                                 "-"
                               }
                             </span>
-
                           </td>
-
-                          {/* BATCH */}
 
                           <td>
                             {
@@ -1046,10 +1006,7 @@ function Medicines({ onNavigate }) {
                             }
                           </td>
 
-                          {/* STOCK */}
-
                           <td>
-
                             <span
                               className={
                                 medicine.stock_quantity <=
@@ -1062,19 +1019,40 @@ function Medicines({ onNavigate }) {
                                 medicine.stock_quantity
                               }
                             </span>
-
                           </td>
 
-                          {/* MRP */}
+                          {/* =========================
+                              SELLING PRICE
+                          ========================= */}
 
-                          <td>
+                          <td className="price-column selling-price-cell">
                             ₹
-                            {
-                              medicine.mrp
-                            }
+                            {Number(
+                              medicine.selling_price
+                            ).toFixed(2)}
                           </td>
 
-                          {/* EXPIRY */}
+                          {/* =========================
+                              MRP
+                          ========================= */}
+
+                          <td className="price-column mrp-cell">
+                            ₹
+                            {Number(
+                              medicine.mrp
+                            ).toFixed(2)}
+                          </td>
+
+                          {/* =========================
+                              PURCHASE PRICE
+                          ========================= */}
+
+                          <td className="price-column purchase-price-cell">
+                            ₹
+                            {Number(
+                              medicine.purchase_price
+                            ).toFixed(2)}
+                          </td>
 
                           <td>
                             {
@@ -1082,10 +1060,7 @@ function Medicines({ onNavigate }) {
                             }
                           </td>
 
-                          {/* ACTION */}
-
                           <td>
-
                             <button
                               className="reduce-button"
                               onClick={() =>
@@ -1096,11 +1071,9 @@ function Medicines({ onNavigate }) {
                             >
                               Reduce Stock
                             </button>
-
                           </td>
 
                         </tr>
-
                       )
                     )}
 

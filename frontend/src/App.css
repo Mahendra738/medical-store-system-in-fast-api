@@ -182,3 +182,47 @@
     border-right-color: var(--border);
   }
 }
+/* =========================================
+   MEDICINE PRICE COLUMNS
+========================================= */
+
+.price-column {
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* SELLING PRICE - MOST IMPORTANT */
+.selling-price-header {
+  color: #15803d;
+  font-weight: 800;
+}
+
+.selling-price-cell {
+  color: #15803d;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+/* MRP - SECOND MOST IMPORTANT */
+.mrp-header {
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.mrp-cell {
+  color: #1d4ed8;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* PURCHASE PRICE - INTERNAL INFORMATION */
+.purchase-price-header {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.purchase-price-cell {
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 400;
+}

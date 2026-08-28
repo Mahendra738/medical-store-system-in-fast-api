@@ -9,28 +9,34 @@ from app.repositories.medicine_repository import (
     get_medicine_by_name,
     search_medicines as repository_search_medicines,
     update_medicine,
+    get_medicine_by_name_and_batch
 )
 from app.schemas.medicine import (
     MedicineCreate,
     MedicineUpdate,
 )
 
-
 def create_new_medicine(
     db: Session,
     medicine_data: MedicineCreate,
 ):
-    existing_medicine = get_medicine_by_name(
+    existing_batch = get_medicine_by_name_and_batch(
         db,
         medicine_data.name,
+        medicine_data.batch_number,
     )
 
-    if existing_medicine:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Medicine already exists",
+    if existing_batch:
+        # Same medicine + same batch
+        # Add the newly received quantity to existing stock.
+        existing_batch.stock_quantity += medicine_data.stock
+
+        return update_medicine(
+            db,
+            existing_batch,
         )
 
+    # New batch of an existing medicine
     medicine = Medicine(
         name=medicine_data.name,
         generic_name=medicine_data.generic_name,
