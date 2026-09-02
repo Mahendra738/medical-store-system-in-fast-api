@@ -1,6 +1,12 @@
 from pydantic import BaseModel, EmailStr, ConfigDict
 from app.core.enums import UserRole
 
+class PublicUserCreate(BaseModel):
+    full_name: str
+    email: EmailStr
+    phone_number: str
+    password: str
+
 
 class UserCreate(BaseModel):
     full_name: str

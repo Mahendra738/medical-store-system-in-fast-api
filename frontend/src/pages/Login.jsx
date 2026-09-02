@@ -1,7 +1,8 @@
 import { useState } from "react";
 import api from "../api/api";
 
-function Login({ onLogin }) {
+// function Login({ onLogin }) {
+function Login({ onLogin, onRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -21,9 +22,17 @@ function Login({ onLogin }) {
         },
       });
 
-      const { access_token } = response.data;
+      const { access_token, user } = response.data;
 
-      localStorage.setItem("access_token", access_token);
+      localStorage.setItem(
+        "access_token",
+        access_token
+      );
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(user)
+      );
 
       onLogin();
     } catch (error) {
@@ -93,6 +102,16 @@ function Login({ onLogin }) {
           >
             {loading ? "Logging in..." : "Login"}
           </button>
+          <div className="register-link">
+            <span>Don't have an account?</span>
+
+            <button
+              type="button"
+              onClick={onRegister}
+            >
+              Register
+            </button>
+          </div>
 
         </form>
 

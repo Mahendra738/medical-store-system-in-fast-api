@@ -1,4 +1,5 @@
 from decimal import Decimal
+from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -13,7 +14,14 @@ class SaleCreate(BaseModel):
     customer_name: str | None = None
     discount: Decimal = Field(default=Decimal("0.00"), ge=0)
     items: list[SaleItemCreate] = Field(min_length=1)
+class SaleItemMedicineResponse(BaseModel):
+    model_config = ConfigDict(
+        from_attributes=True
+    )
 
+    id: int
+    name: str
+    batch_number: str
 
 class SaleItemResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -26,9 +34,13 @@ class SaleItemResponse(BaseModel):
     discount: Decimal
     total_price: Decimal
 
+    medicine: SaleItemMedicineResponse
+
 
 class SaleResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(
+        from_attributes=True
+    )
 
     id: int
     invoice_number: str
@@ -36,4 +48,5 @@ class SaleResponse(BaseModel):
     subtotal: Decimal
     discount: Decimal
     total_amount: Decimal
+    created_at: datetime
     items: list[SaleItemResponse]

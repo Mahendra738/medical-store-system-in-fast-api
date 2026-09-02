@@ -6,23 +6,17 @@ from app.core.security import (
     verify_password,
     create_access_token,
 )
+from app.core.enums import UserRole
 from app.models.user import User
 from app.repositories.user_repository import (
     create_user,
     get_user_by_email,
 )
-from app.schemas.user import UserCreate
+from app.schemas.user import PublicUserCreate
 
 
-def register_user(
-    db: Session,
-    user_data: UserCreate,
-):
-    # Check if email already exists
-    existing_user = get_user_by_email(
-        db,
-        user_data.email,
-    )
+def register_user(db: Session, user_data: PublicUserCreate):
+    existing_user = get_user_by_email(db, user_data.email)
 
     if existing_user:
         raise HTTPException(
@@ -30,20 +24,28 @@ def register_user(
             detail="Email already registered",
         )
 
+    # First user becomes admin automatically
+    user_count = db.query(User).count()
+
+    if user_count == 0:
+        role = UserRole.admin
+    else:
+        role = UserRole.staff
+
     user = User(
         full_name=user_data.full_name,
         email=user_data.email,
         phone_number=user_data.phone_number,
-        hashed_password=hash_password(
-            user_data.password
-        ),
-        role=user_data.role,
+        hashed_password=hash_password(user_data.password),
+        role=role,
+        is_active=True,
     )
 
-    return create_user(
-        db,
-        user,
-    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    return user
 
 
 def authenticate_user(

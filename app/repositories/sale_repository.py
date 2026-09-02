@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.models.sale import Sale
 from app.models.sale_item import SaleItem
@@ -21,6 +21,10 @@ def get_sale_by_id(
 ) -> Sale | None:
     return (
         db.query(Sale)
+        .options(
+            joinedload(Sale.items)
+            .joinedload(SaleItem.medicine)
+        )
         .filter(Sale.id == sale_id)
         .first()
     )
@@ -32,6 +36,10 @@ def get_sale_by_invoice_number(
 ) -> Sale | None:
     return (
         db.query(Sale)
+        .options(
+            joinedload(Sale.items)
+            .joinedload(SaleItem.medicine)
+        )
         .filter(
             Sale.invoice_number == invoice_number,
         )
@@ -44,6 +52,10 @@ def get_all_sales(
 ):
     return (
         db.query(Sale)
+        .options(
+            joinedload(Sale.items)
+            .joinedload(SaleItem.medicine)
+        )
         .order_by(Sale.created_at.desc())
         .all()
     )
