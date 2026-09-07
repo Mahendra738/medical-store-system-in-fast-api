@@ -47,6 +47,7 @@ function Dashboard({ onLogout, onNavigate }) {
             </p>
           </button>
 
+          {/* Sales History */}
           <button
             className="dashboard-card"
             onClick={() =>
@@ -71,6 +72,7 @@ function Dashboard({ onLogout, onNavigate }) {
             </p>
           </button>
 
+          {/* Categories */}
           <button
             className="dashboard-card"
             onClick={() => onNavigate("categories")}
@@ -81,18 +83,35 @@ function Dashboard({ onLogout, onNavigate }) {
             </p>
           </button>
 
+          {/* Admin Features */}
           {isAdmin && (
-            <button
-              className="dashboard-card"
-              onClick={() =>
-                onNavigate("users")
-              }
-            >
-              <h3>User Management</h3>
-              <p>
-                Manage staff and manager accounts.
-              </p>
-            </button>
+            <>
+              {/* Sales Reports */}
+              <button
+                className="dashboard-card"
+                onClick={() =>
+                  onNavigate("sales-reports")
+                }
+              >
+                <h3>Sales Reports</h3>
+                <p>
+                  View sales performance and business reports.
+                </p>
+              </button>
+
+              {/* User Management */}
+              <button
+                className="dashboard-card"
+                onClick={() =>
+                  onNavigate("users")
+                }
+              >
+                <h3>User Management</h3>
+                <p>
+                  Manage staff and manager accounts.
+                </p>
+              </button>
+            </>
           )}
 
         </div>

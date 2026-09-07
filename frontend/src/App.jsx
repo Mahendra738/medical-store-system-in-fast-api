@@ -10,6 +10,7 @@ import SaleDetails from "./pages/SaleDetails";
 import Inventory from "./pages/Inventory";
 import Categories from "./pages/Categories";
 import UserManagement from "./pages/UserManagement";
+import SalesReports from "./pages/SalesReports";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -66,7 +67,9 @@ function App() {
   if (page === "categories") {
     return <Categories onNavigate={setPage} />;
   }
-
+  if (page === "sales-reports") {
+    return <SalesReports onNavigate={setPage} />;
+  }
   if (page === "sales-history") {
     return (
       <SalesHistory

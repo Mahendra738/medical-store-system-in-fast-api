@@ -13,15 +13,45 @@ function Sales({ onNavigate }) {
 
   const [cart, setCart] = useState([]);
 
+  // =========================
+  // CUSTOMER
+  // =========================
+
   const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [customerAddress, setCustomerAddress] = useState("");
+
   const [billDiscount, setBillDiscount] = useState("0");
+
+  // =========================
+  // PRESCRIPTION
+  // =========================
+
+  const [doctorName, setDoctorName] = useState("");
+  const [doctorAddress, setDoctorAddress] = useState("");
+  const [prescriptionDate, setPrescriptionDate] = useState("");
+  const [prescriptionNumber, setPrescriptionNumber] = useState("");
+  const [prescriptionNotes, setPrescriptionNotes] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Invoice shown after successful sale
   const [completedSale, setCompletedSale] = useState(null);
+
+  // =========================
+  // PRESCRIPTION REQUIRED?
+  // =========================
+
+  const prescriptionRequired = useMemo(() => {
+    return cart.some((item) => {
+      const schedule = String(
+        item.schedule_type || ""
+      ).toUpperCase();
+
+      return ["H", "H1", "X"].includes(schedule);
+    });
+  }, [cart]);
 
   // =========================
   // GET MEDICINES
@@ -89,11 +119,13 @@ function Sales({ onNavigate }) {
   // =========================
 
   const handleSelectMedicine = (medicine) => {
+    console.log("SELECTED MEDICINE:", medicine);
     setSelectedMedicine(medicine);
 
     setQuantity(1);
 
     const mrp = Number(medicine.mrp);
+
     const normalSellingPrice = Number(
       medicine.selling_price
     );
@@ -114,7 +146,6 @@ function Sales({ onNavigate }) {
 
   // =========================
   // CUSTOMER DISCOUNT %
-  // Based on MRP
   // =========================
 
   const handleDiscountChange = (event) => {
@@ -273,26 +304,6 @@ function Sales({ onNavigate }) {
       return;
     }
 
-    /*
-      IMPORTANT
-
-      Customer discount is calculated from MRP.
-
-      But the backend sale discount should represent
-      the discount from NORMAL SELLING PRICE to FINAL
-      SELLING PRICE.
-
-      Example:
-
-      MRP = 100
-      Normal selling price = 80
-      Final customer price = 75
-
-      Customer gets ₹25 discount from MRP.
-
-      But backend needs ₹5 discount from selling price.
-    */
-
     const backendItemDiscount =
       Math.max(
         0,
@@ -317,6 +328,9 @@ function Sales({ onNavigate }) {
 
       batch_number:
         selectedMedicine.batch_number,
+
+      schedule_type:
+        selectedMedicine.schedule_type || "OTC",
 
       quantity: qty,
 
@@ -351,7 +365,6 @@ function Sales({ onNavigate }) {
       item,
     ]);
 
-    // Reset medicine selection
     setSelectedMedicine(null);
     setSearch("");
     setQuantity(1);
@@ -407,6 +420,60 @@ function Sales({ onNavigate }) {
   );
 
   // =========================
+  // PRESCRIPTION VALIDATION
+  // =========================
+
+  const validatePrescription = () => {
+    if (!prescriptionRequired) {
+      return true;
+    }
+
+    if (!customerName.trim()) {
+      alert(
+        "Customer name is required for prescription medicines."
+      );
+      return false;
+    }
+
+    if (!customerPhone.trim()) {
+      alert(
+        "Customer phone number is required for prescription medicines."
+      );
+      return false;
+    }
+
+    if (!customerAddress.trim()) {
+      alert(
+        "Customer address is required for prescription medicines."
+      );
+      return false;
+    }
+
+    if (!doctorName.trim()) {
+      alert(
+        "Doctor name is required."
+      );
+      return false;
+    }
+
+    if (!doctorAddress.trim()) {
+      alert(
+        "Doctor address is required."
+      );
+      return false;
+    }
+
+    if (!prescriptionDate) {
+      alert(
+        "Prescription date is required."
+      );
+      return false;
+    }
+
+    return true;
+  };
+
+  // =========================
   // CREATE SALE
   // =========================
 
@@ -418,17 +485,14 @@ function Sales({ onNavigate }) {
       return;
     }
 
+    if (!validatePrescription()) {
+      return;
+    }
+
     try {
       setLoading(true);
       setError("");
       setSuccess("");
-
-      /*
-        Save current cart before clearing it.
-
-        This is important because the backend response
-        does not contain the full medicine information.
-      */
 
       const invoiceItems =
         cart.map((item) => ({
@@ -440,6 +504,9 @@ function Sales({ onNavigate }) {
 
           batch_number:
             item.batch_number,
+
+          schedule_type:
+            item.schedule_type,
 
           quantity:
             item.quantity,
@@ -467,6 +534,12 @@ function Sales({ onNavigate }) {
         customer_name:
           customerName.trim() || null,
 
+        customer_phone:
+          customerPhone.trim() || null,
+
+        customer_address:
+          customerAddress.trim() || null,
+
         discount:
           additionalBillDiscount,
 
@@ -477,14 +550,42 @@ function Sales({ onNavigate }) {
           quantity:
             item.quantity,
 
-          /*
-            Send discount from normal selling price,
-            NOT from MRP.
-          */
           discount:
             item.backend_discount,
         })),
       };
+
+      // =========================
+      // ADD PRESCRIPTION
+      // =========================
+
+      if (prescriptionRequired) {
+        payload.prescription = {
+          customer_name:
+            customerName.trim(),
+
+          customer_phone:
+            customerPhone.trim(),
+
+          customer_address:
+            customerAddress.trim(),
+
+          doctor_name:
+            doctorName.trim(),
+
+          doctor_address:
+            doctorAddress.trim(),
+
+          prescription_date:
+            prescriptionDate,
+
+          prescription_number:
+            prescriptionNumber.trim() || null,
+
+          notes:
+            prescriptionNotes.trim() || null,
+        };
+      }
 
       const response = await api.post(
         "/sales/",
@@ -494,10 +595,6 @@ function Sales({ onNavigate }) {
       const sale =
         response.data;
 
-      // =========================
-      // BUILD COMPLETE INVOICE
-      // =========================
-
       const invoice = {
         invoice_number:
           sale.invoice_number,
@@ -505,6 +602,36 @@ function Sales({ onNavigate }) {
         customer_name:
           customerName.trim() ||
           null,
+
+        customer_phone:
+          customerPhone.trim() ||
+          null,
+
+        customer_address:
+          customerAddress.trim() ||
+          null,
+
+        prescription:
+          prescriptionRequired
+            ? {
+                doctor_name:
+                  doctorName.trim(),
+
+                doctor_address:
+                  doctorAddress.trim(),
+
+                prescription_date:
+                  prescriptionDate,
+
+                prescription_number:
+                  prescriptionNumber.trim() ||
+                  null,
+
+                notes:
+                  prescriptionNotes.trim() ||
+                  null,
+              }
+            : null,
 
         items:
           invoiceItems,
@@ -533,14 +660,24 @@ function Sales({ onNavigate }) {
         `Sale completed successfully. Invoice: ${sale.invoice_number}`
       );
 
-      // Clear current bill
+      // =========================
+      // CLEAR BILL
+      // =========================
+
       setCart([]);
 
       setCustomerName("");
+      setCustomerPhone("");
+      setCustomerAddress("");
+
+      setDoctorName("");
+      setDoctorAddress("");
+      setPrescriptionDate("");
+      setPrescriptionNumber("");
+      setPrescriptionNotes("");
 
       setBillDiscount("0");
 
-      // Refresh stock
       await fetchMedicines();
 
     } catch (error) {
@@ -570,9 +707,7 @@ function Sales({ onNavigate }) {
   return (
     <div className="sales-page">
 
-      {/* =========================
-          HEADER
-      ========================= */}
+      {/* HEADER */}
 
       <div className="page-header">
 
@@ -600,9 +735,7 @@ function Sales({ onNavigate }) {
 
       </div>
 
-      {/* =========================
-          MESSAGES
-      ========================= */}
+      {/* MESSAGES */}
 
       {error && (
         <div className="error-message">
@@ -616,15 +749,11 @@ function Sales({ onNavigate }) {
         </div>
       )}
 
-      {/* =========================
-          SALES LAYOUT
-      ========================= */}
+      {/* SALES LAYOUT */}
 
       <div className="sales-layout">
 
-        {/* =========================
-            LEFT SIDE
-        ========================= */}
+        {/* LEFT SIDE */}
 
         <div className="sales-left">
 
@@ -710,6 +839,14 @@ function Sales({ onNavigate }) {
                           ).toFixed(2)}
                         </span>
 
+                        <span>
+                          Schedule:{" "}
+                          {
+                            medicine.schedule_type ||
+                            "OTC"
+                          }
+                        </span>
+
                       </button>
 
                     )
@@ -740,6 +877,16 @@ function Sales({ onNavigate }) {
                       {
                         selectedMedicine.batch_number
                       }
+                    </p>
+
+                    <p>
+                      Schedule:{" "}
+                      <strong>
+                        {
+                          selectedMedicine.schedule_type ||
+                          "OTC"
+                        }
+                      </strong>
                     </p>
 
                   </div>
@@ -973,9 +1120,7 @@ function Sales({ onNavigate }) {
 
         </div>
 
-        {/* =========================
-            RIGHT SIDE
-        ========================= */}
+        {/* RIGHT SIDE */}
 
         <div className="sales-right">
 
@@ -985,12 +1130,15 @@ function Sales({ onNavigate }) {
               Current Bill
             </h3>
 
-            {/* CUSTOMER */}
+            {/* CUSTOMER INFORMATION */}
 
             <div className="form-group">
 
               <label>
                 Customer Name
+                {prescriptionRequired && (
+                  <span> *</span>
+                )}
               </label>
 
               <input
@@ -1001,10 +1149,221 @@ function Sales({ onNavigate }) {
                     event.target.value
                   )
                 }
-                placeholder="Optional"
+                placeholder={
+                  prescriptionRequired
+                    ? "Required"
+                    : "Optional"
+                }
               />
 
             </div>
+
+            {prescriptionRequired && (
+
+              <>
+                {/* PRESCRIPTION WARNING */}
+
+                <div
+                  style={{
+                    padding: "12px",
+                    marginBottom: "15px",
+                    borderRadius: "8px",
+                    border: "1px solid #f0ad4e",
+                    background:
+                      "#fff8e6",
+                  }}
+                >
+                  <strong>
+                    ⚠ Prescription Required
+                  </strong>
+
+                  <p
+                    style={{
+                      margin:
+                        "6px 0 0",
+                    }}
+                  >
+                    This bill contains an
+                    H, H1, or X schedule
+                    medicine. Complete
+                    the prescription details
+                    below before generating
+                    the bill.
+                  </p>
+                </div>
+
+                {/* CUSTOMER PHONE */}
+
+                <div className="form-group">
+
+                  <label>
+                    Customer Phone *
+                  </label>
+
+                  <input
+                    type="tel"
+                    value={customerPhone}
+                    onChange={(event) =>
+                      setCustomerPhone(
+                        event.target.value
+                      )
+                    }
+                    placeholder="Required"
+                  />
+
+                </div>
+
+                {/* CUSTOMER ADDRESS */}
+
+                <div className="form-group">
+
+                  <label>
+                    Customer Address *
+                  </label>
+
+                  <textarea
+                    value={customerAddress}
+                    onChange={(event) =>
+                      setCustomerAddress(
+                        event.target.value
+                      )
+                    }
+                    placeholder="Customer full address"
+                    rows="3"
+                  />
+
+                </div>
+
+                {/* PRESCRIPTION DETAILS */}
+
+                <div
+                  style={{
+                    marginTop: "15px",
+                    paddingTop: "15px",
+                    borderTop:
+                      "1px solid #ddd",
+                  }}
+                >
+
+                  <h4>
+                    Prescription Details
+                  </h4>
+
+                  {/* DOCTOR */}
+
+                  <div className="form-group">
+
+                    <label>
+                      Doctor Name *
+                    </label>
+
+                    <input
+                      type="text"
+                      value={doctorName}
+                      onChange={(event) =>
+                        setDoctorName(
+                          event.target.value
+                        )
+                      }
+                      placeholder="Required"
+                    />
+
+                  </div>
+
+                  {/* DOCTOR ADDRESS */}
+
+                  <div className="form-group">
+
+                    <label>
+                      Doctor Address *
+                    </label>
+
+                    <textarea
+                      value={doctorAddress}
+                      onChange={(event) =>
+                        setDoctorAddress(
+                          event.target.value
+                        )
+                      }
+                      placeholder="Doctor / clinic address"
+                      rows="3"
+                    />
+
+                  </div>
+
+                  {/* PRESCRIPTION DATE */}
+
+                  <div className="form-group">
+
+                    <label>
+                      Prescription Date *
+                    </label>
+
+                    <input
+                      type="date"
+                      value={
+                        prescriptionDate
+                      }
+                      onChange={(event) =>
+                        setPrescriptionDate(
+                          event.target.value
+                        )
+                      }
+                    />
+
+                  </div>
+
+                  {/* PRESCRIPTION NUMBER */}
+
+                  <div className="form-group">
+
+                    <label>
+                      Prescription Number
+                    </label>
+
+                    <input
+                      type="text"
+                      value={
+                        prescriptionNumber
+                      }
+                      onChange={(event) =>
+                        setPrescriptionNumber(
+                          event.target.value
+                        )
+                      }
+                      placeholder="Optional"
+                    />
+
+                  </div>
+
+                  {/* NOTES */}
+
+                  <div className="form-group">
+
+                    <label>
+                      Notes
+                    </label>
+
+                    <textarea
+                      value={
+                        prescriptionNotes
+                      }
+                      onChange={(event) =>
+                        setPrescriptionNotes(
+                          event.target.value
+                        )
+                      }
+                      placeholder="Optional notes"
+                      rows="3"
+                    />
+
+                  </div>
+
+                </div>
+
+              </>
+
+            )}
 
             {/* CART */}
 
@@ -1037,6 +1396,11 @@ function Sales({ onNavigate }) {
                         <span>
                           Batch:{" "}
                           {item.batch_number}
+                        </span>
+
+                        <span>
+                          Schedule:{" "}
+                          {item.schedule_type}
                         </span>
 
                         <span>
@@ -1084,9 +1448,7 @@ function Sales({ onNavigate }) {
 
             )}
 
-            {/* =========================
-                BILL SUMMARY
-            ========================= */}
+            {/* BILL SUMMARY */}
 
             <div className="bill-summary">
 
@@ -1181,6 +1543,8 @@ function Sales({ onNavigate }) {
 
               {loading
                 ? "Processing..."
+                : prescriptionRequired
+                ? "Complete Sale & Save Prescription"
                 : "Complete Sale"}
 
             </button>
@@ -1250,7 +1614,104 @@ function Sales({ onNavigate }) {
                 }
               </strong>
 
+              {completedSale.customer_phone && (
+                <span>
+                  Phone:{" "}
+                  {
+                    completedSale.customer_phone
+                  }
+                </span>
+              )}
+
+              {completedSale.customer_address && (
+                <span>
+                  Address:{" "}
+                  {
+                    completedSale.customer_address
+                  }
+                </span>
+              )}
+
             </div>
+
+            {/* PRESCRIPTION */}
+
+            {completedSale.prescription && (
+
+              <div
+                style={{
+                  marginTop: "15px",
+                  padding: "12px",
+                  border:
+                    "1px solid #ccc",
+                  borderRadius: "8px",
+                }}
+              >
+
+                <strong>
+                  Prescription Details
+                </strong>
+
+                <div>
+                  Doctor:{" "}
+                  {
+                    completedSale
+                      .prescription
+                      .doctor_name
+                  }
+                </div>
+
+                <div>
+                  Doctor Address:{" "}
+                  {
+                    completedSale
+                      .prescription
+                      .doctor_address
+                  }
+                </div>
+
+                <div>
+                  Prescription Date:{" "}
+                  {
+                    completedSale
+                      .prescription
+                      .prescription_date
+                  }
+                </div>
+
+                {completedSale
+                  .prescription
+                  .prescription_number && (
+
+                  <div>
+                    Prescription No:{" "}
+                    {
+                      completedSale
+                        .prescription
+                        .prescription_number
+                    }
+                  </div>
+
+                )}
+
+                {completedSale
+                  .prescription
+                  .notes && (
+
+                  <div>
+                    Notes:{" "}
+                    {
+                      completedSale
+                        .prescription
+                        .notes
+                    }
+                  </div>
+
+                )}
+
+              </div>
+
+            )}
 
             {/* ITEMS */}
 

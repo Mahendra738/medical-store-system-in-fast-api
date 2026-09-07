@@ -3101,3 +3101,1194 @@ grid-template-columns: 1fr;
   color: white;
   font-weight: 600;
 }
+
+/* =========================================================
+   SALES REPORTS
+   ========================================================= */
+
+.sales-reports-page {
+  min-height: 100vh;
+  padding: 30px;
+  background: #f5f7f6;
+}
+
+/* =========================
+   HEADER
+   ========================= */
+
+.sales-reports-header {
+  margin-bottom: 25px;
+}
+
+.sales-reports-header h1 {
+  margin: 0;
+  font-size: 30px;
+  color: #1f2937;
+}
+
+.sales-reports-header p {
+  margin-top: 6px;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+/* =========================
+   PERIOD FILTER
+   ========================= */
+
+.sales-report-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.sales-report-filters button {
+  padding: 10px 18px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  color: #374151;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+.sales-report-filters button:hover {
+  border-color: #22c55e;
+  color: #16a34a;
+}
+
+.sales-report-filters button.active {
+  background: #16a34a;
+  color: white;
+  border-color: #16a34a;
+}
+
+/* =========================
+   SUMMARY CARDS
+   ========================= */
+
+.sales-report-summary {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
+.sales-report-summary-card {
+  background: white;
+  padding: 22px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.sales-report-summary-card h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.sales-report-summary-card p {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* =========================
+   REPORT SECTIONS
+   ========================= */
+
+.sales-report-section {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.sales-report-section h2 {
+  margin: 0 0 20px;
+  font-size: 20px;
+  color: #1f2937;
+}
+
+/* =========================
+   TABLE
+   ========================= */
+
+.sales-report-table-wrapper {
+  overflow-x: auto;
+}
+
+.sales-report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sales-report-table th {
+  text-align: left;
+  padding: 13px 15px;
+  background: #f9fafb;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sales-report-table td {
+  padding: 14px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #374151;
+  font-size: 14px;
+}
+
+.sales-report-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.sales-report-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================
+   MONEY
+   ========================= */
+
+.sales-report-money {
+  font-weight: 600;
+  color: #15803d;
+}
+
+/* =========================
+   EMPTY STATE
+   ========================= */
+
+.sales-report-empty {
+  padding: 35px;
+  text-align: center;
+  color: #6b7280;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+/* =========================
+   LOADING
+   ========================= */
+
+.sales-report-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+/* =========================
+   ERROR
+   ========================= */
+
+.sales-report-error {
+  margin: 30px;
+  padding: 15px 18px;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1100px) {
+  .sales-report-summary {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 750px) {
+  .sales-reports-page {
+    padding: 20px;
+  }
+
+  .sales-report-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .sales-report-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .sales-report-filters {
+    flex-direction: column;
+  }
+
+  .sales-report-filters button {
+    width: 100%;
+  }
+}
+
+.custom-date-range {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.custom-date-range .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.custom-date-range label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.custom-date-range input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+}
+
+.custom-date-range input:focus {
+  outline: none;
+  border-color: #16a34a;
+}
+
+.custom-report-button {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  background: #16a34a;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.custom-report-button:hover {
+  background: #15803d;
+}
+
+@media (max-width: 600px) {
+  .custom-date-range {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .custom-report-button {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   SALES & BILLING PAGE
+========================================================= */
+
+.sales-page {
+  padding: 24px;
+  min-height: 100vh;
+  background: #f5f7f6;
+}
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.sales-page .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.sales-page .page-header h2 {
+  margin: 12px 0 4px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.sales-page .page-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.sales-page .back-button {
+  border: none;
+  background: transparent;
+  color: #198754;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sales-page .back-button:hover {
+  color: #146c43;
+}
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+.sales-page .error-message,
+.sales-page .success-message {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.sales-page .error-message {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #be123c;
+}
+
+.sales-page .success-message {
+  background: #ecfdf3;
+  border: 1px solid #a7f3d0;
+  color: #047857;
+}
+
+/* =========================================================
+   MAIN SALES LAYOUT
+========================================================= */
+
+.sales-page .sales-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(400px, 0.9fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.sales-page .sales-left,
+.sales-page .sales-right {
+  min-width: 0;
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.sales-page .sales-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.sales-page .sales-card h3 {
+  margin: 0 0 20px;
+  color: #1f2937;
+  font-size: 19px;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.sales-page .search-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.sales-page .search-section input {
+  flex: 1;
+}
+
+.sales-page input,
+.sales-page textarea,
+.sales-page select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #1f2937;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.sales-page input:focus,
+.sales-page textarea:focus,
+.sales-page select:focus {
+  border-color: #198754;
+  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.10);
+}
+
+.sales-page textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.sales-page .search-section button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 7px;
+  background: #198754;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sales-page .search-section button:hover {
+  background: #157347;
+}
+
+/* =========================================================
+   MEDICINE SEARCH RESULTS
+========================================================= */
+
+.sales-page .sales-medicine-results {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  margin-bottom: 18px;
+}
+
+.sales-page .sales-medicine-result {
+  width: 100%;
+  text-align: left;
+  display: grid;
+  grid-template-columns: 1.8fr repeat(4, auto);
+  gap: 12px;
+  align-items: center;
+
+  padding: 13px 14px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sales-page .sales-medicine-result:hover {
+  border-color: #198754;
+  background: #f0fdf4;
+  transform: translateY(-1px);
+}
+
+.sales-page .sales-medicine-result strong {
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.sales-page .sales-medicine-result span {
+  color: #6b7280;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   SELECTED MEDICINE
+========================================================= */
+
+.sales-page .selected-medicine {
+  border: 1px solid #d1fae5;
+  background: #f8fffb;
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.sales-page .selected-medicine-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.sales-page .selected-medicine-header h4 {
+  margin: 0 0 6px;
+  font-size: 17px;
+  color: #1f2937;
+}
+
+.sales-page .selected-medicine-header p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.sales-page .selected-medicine-header strong {
+  color: #198754;
+}
+
+.sales-page .clear-button {
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  padding: 7px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.sales-page .clear-button:hover {
+  background: #f3f4f6;
+}
+
+/* =========================================================
+   PRICE INFORMATION
+========================================================= */
+
+.sales-page .price-information {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.sales-page .price-box {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.sales-page .price-box span {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 5px;
+}
+
+.sales-page .price-box strong {
+  font-size: 17px;
+  color: #1f2937;
+}
+
+.sales-page .normal-price-box {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.sales-page .normal-price-box strong {
+  color: #15803d;
+}
+
+/* =========================================================
+   BILLING PRICE INPUTS
+========================================================= */
+
+.sales-page .billing-price-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.7fr;
+  gap: 12px;
+}
+
+.sales-page .form-group {
+  margin-bottom: 14px;
+}
+
+.sales-page .form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.sales-page .form-group label span {
+  color: #dc2626;
+}
+
+.sales-page .form-group small {
+  display: block;
+  margin-top: 5px;
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+/* =========================================================
+   PRICE SUMMARY
+========================================================= */
+
+.sales-page .price-summary {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.sales-page .price-summary strong {
+  margin-left: 6px;
+  color: #198754;
+}
+
+.sales-page .price-warning {
+  margin-top: 7px;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.sales-page .price-normal {
+  margin-top: 7px;
+  color: #15803d;
+  font-weight: 600;
+}
+
+.sales-page .price-positive {
+  margin-top: 7px;
+  color: #15803d;
+  font-weight: 600;
+}
+
+/* =========================================================
+   ADD TO CART
+========================================================= */
+
+.sales-page .add-to-cart-button {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px;
+  border: none;
+  border-radius: 7px;
+  background: #198754;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sales-page .add-to-cart-button:hover {
+  background: #157347;
+}
+
+/* =========================================================
+   CUSTOMER / PRESCRIPTION SECTION
+========================================================= */
+
+.sales-page .sales-right .form-group {
+  margin-bottom: 15px;
+}
+
+.sales-page .sales-right h4 {
+  margin: 0 0 14px;
+  color: #374151;
+  font-size: 16px;
+}
+
+/* =========================================================
+   PRESCRIPTION WARNING
+========================================================= */
+
+.sales-page .sales-right div[style*="f0ad4e"] {
+  background: #fffbeb !important;
+  border-color: #f59e0b !important;
+  color: #92400e;
+}
+
+.sales-page .sales-right div[style*="f0ad4e"] strong {
+  color: #b45309;
+}
+
+.sales-page .sales-right div[style*="f0ad4e"] p {
+  color: #92400e;
+}
+
+/* =========================================================
+   CART
+========================================================= */
+
+.sales-page .bill-items {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.sales-page .bill-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+
+  padding: 13px 14px;
+
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.sales-page .bill-item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.sales-page .bill-item-main strong {
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.sales-page .bill-item-main span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.sales-page .bill-item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sales-page .bill-item-right strong {
+  color: #198754;
+  white-space: nowrap;
+}
+
+.sales-page .remove-item-button {
+  border: none;
+  background: transparent;
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sales-page .remove-item-button:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   EMPTY CART
+========================================================= */
+
+.sales-page .empty-state {
+  padding: 30px 15px;
+  text-align: center;
+  color: #9ca3af;
+  background: #f9fafb;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+/* =========================================================
+   BILL SUMMARY
+========================================================= */
+
+.sales-page .bill-summary {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.sales-page .bill-summary > div:not(.form-group):not(.bill-total) {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  font-size: 14px;
+}
+
+.sales-page .bill-summary span {
+  color: #6b7280;
+}
+
+.sales-page .bill-summary strong {
+  color: #1f2937;
+}
+
+.sales-page .bill-summary .form-group {
+  margin-top: 12px;
+}
+
+.sales-page .bill-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 14px;
+  border-top: 2px solid #e5e7eb;
+}
+
+.sales-page .bill-total span {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.sales-page .bill-total strong {
+  font-size: 22px;
+  color: #198754;
+}
+
+/* =========================================================
+   COMPLETE SALE
+========================================================= */
+
+.sales-page .complete-sale-button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 13px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #198754;
+  color: white;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.sales-page .complete-sale-button:hover:not(:disabled) {
+  background: #157347;
+}
+
+.sales-page .complete-sale-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   INVOICE OVERLAY
+========================================================= */
+
+.sales-page .invoice-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(17, 24, 39, 0.65);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  z-index: 9999;
+}
+
+.sales-page .invoice-modal {
+  width: min(900px, 100%);
+  max-height: 92vh;
+  overflow-y: auto;
+
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================================================
+   INVOICE HEADER
+========================================================= */
+
+.sales-page .invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.sales-page .invoice-header h2 {
+  margin: 0;
+  color: #198754;
+  font-size: 23px;
+}
+
+.sales-page .invoice-header p {
+  margin: 4px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.sales-page .invoice-title {
+  text-align: right;
+}
+
+.sales-page .invoice-title strong {
+  display: block;
+  font-size: 18px;
+  color: #1f2937;
+}
+
+.sales-page .invoice-title span {
+  display: block;
+  margin-top: 4px;
+  color: #198754;
+  font-weight: 700;
+}
+
+.sales-page .invoice-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 18px 0;
+}
+
+/* =========================================================
+   INVOICE CUSTOMER
+========================================================= */
+
+.sales-page .invoice-customer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 15px;
+}
+
+.sales-page .invoice-customer > span:first-child {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.sales-page .invoice-customer strong {
+  font-size: 15px;
+  color: #1f2937;
+}
+
+/* =========================================================
+   INVOICE ITEMS
+========================================================= */
+
+.sales-page .invoice-items {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.sales-page .invoice-item {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr 0.6fr 0.9fr 0.9fr 1fr;
+  gap: 10px;
+
+  padding: 10px 8px;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  font-size: 13px;
+  align-items: center;
+}
+
+.sales-page .invoice-item-header {
+  background: #f3f4f6;
+  border-radius: 6px 6px 0 0;
+  font-weight: 700;
+  color: #374151;
+}
+
+.sales-page .invoice-item span {
+  min-width: 0;
+}
+
+/* =========================================================
+   INVOICE SUMMARY
+========================================================= */
+
+.sales-page .invoice-summary {
+  margin-top: 20px;
+  margin-left: auto;
+  width: min(350px, 100%);
+}
+
+.sales-page .invoice-summary > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  font-size: 14px;
+}
+
+.sales-page .invoice-summary span {
+  color: #6b7280;
+}
+
+.sales-page .invoice-summary strong {
+  color: #1f2937;
+}
+
+.sales-page .invoice-summary .invoice-total {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 2px solid #1f2937;
+}
+
+.sales-page .invoice-summary .invoice-total span {
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.sales-page .invoice-summary .invoice-total strong {
+  font-size: 20px;
+  color: #198754;
+}
+
+/* =========================================================
+   INVOICE FOOTER
+========================================================= */
+
+.sales-page .invoice-thank-you {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 18px;
+  border-top: 1px solid #e5e7eb;
+
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* =========================================================
+   INVOICE ACTIONS
+========================================================= */
+
+.sales-page .invoice-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.sales-page .invoice-actions button {
+  padding: 10px 18px;
+  border-radius: 7px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sales-page .print-invoice-button {
+  border: none;
+  background: #198754;
+  color: white;
+}
+
+.sales-page .print-invoice-button:hover {
+  background: #157347;
+}
+
+.sales-page .close-invoice-button {
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+}
+
+.sales-page .close-invoice-button:hover {
+  background: #f3f4f6;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+  .sales-page .sales-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sales-page .sales-right {
+    width: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .sales-page {
+    padding: 14px;
+  }
+
+  .sales-page .sales-card {
+    padding: 16px;
+  }
+
+  .sales-page .billing-price-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sales-page .price-information {
+    grid-template-columns: 1fr;
+  }
+
+  .sales-page .sales-medicine-result {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sales-page .invoice-modal {
+    padding: 18px;
+  }
+
+  .sales-page .invoice-header {
+    flex-direction: column;
+  }
+
+  .sales-page .invoice-title {
+    text-align: left;
+  }
+
+  .sales-page .invoice-actions {
+    flex-direction: column;
+  }
+
+  .sales-page .invoice-actions button {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   PRINT BILL
+========================================================= */
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .sales-page .invoice-modal,
+  .sales-page .invoice-modal * {
+    visibility: visible;
+  }
+
+  .sales-page .invoice-modal {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    max-height: none;
+    overflow: visible;
+
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .sales-page .invoice-overlay {
+    position: static;
+    background: white;
+    padding: 0;
+  }
+
+  .sales-page .invoice-actions {
+    display: none;
+  }
+}

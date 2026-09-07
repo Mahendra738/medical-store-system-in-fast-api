@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Numeric, String
+from sqlalchemy import Column, Integer, Numeric, String, Text
 from sqlalchemy.orm import relationship
 
 from app.db.base import Base
@@ -26,6 +26,16 @@ class Sale(Base, TimestampMixin):
         nullable=True,
     )
 
+    customer_phone = Column(
+        String,
+        nullable=True,
+    )
+
+    customer_address = Column(
+        Text,
+        nullable=True,
+    )
+
     subtotal = Column(
         Numeric(10, 2),
         nullable=False,
@@ -47,5 +57,12 @@ class Sale(Base, TimestampMixin):
     items = relationship(
         "SaleItem",
         back_populates="sale",
+        cascade="all, delete-orphan",
+    )
+
+    prescription = relationship(
+        "Prescription",
+        back_populates="sale",
+        uselist=False,
         cascade="all, delete-orphan",
     )
