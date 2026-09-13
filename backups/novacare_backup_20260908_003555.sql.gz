@@ -1,0 +1,677 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict pmWfVCttuICbPOoFQFEzOgyzUr30cFfLyG54jWuwyTx8bIa6rZyeZVyRTEacYo0
+
+-- Dumped from database version 18.1
+-- Dumped by pg_dump version 18.6
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: scheduletype; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.scheduletype AS ENUM (
+    'OTC',
+    'H',
+    'H1',
+    'X'
+);
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: alembic_version; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.alembic_version (
+    version_num character varying(32) NOT NULL
+);
+
+
+--
+-- Name: categories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.categories (
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    description character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    is_active boolean NOT NULL
+);
+
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.categories_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
+
+
+--
+-- Name: medicines; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.medicines (
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    generic_name character varying NOT NULL,
+    brand_name character varying,
+    category_id integer NOT NULL,
+    batch_number character varying NOT NULL,
+    expiry_date date NOT NULL,
+    mrp numeric(10,2) NOT NULL,
+    purchase_price numeric(10,2) NOT NULL,
+    selling_price numeric(10,2) NOT NULL,
+    stock_quantity integer NOT NULL,
+    minimum_stock integer NOT NULL,
+    schedule_type public.scheduletype NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    is_active boolean NOT NULL,
+    medicine_type character varying NOT NULL,
+    drawer character varying NOT NULL
+);
+
+
+--
+-- Name: medicines_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.medicines_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: medicines_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.medicines_id_seq OWNED BY public.medicines.id;
+
+
+--
+-- Name: prescriptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.prescriptions (
+    id integer NOT NULL,
+    sale_id integer NOT NULL,
+    customer_name character varying NOT NULL,
+    customer_phone character varying NOT NULL,
+    customer_address text NOT NULL,
+    doctor_name character varying NOT NULL,
+    doctor_address text NOT NULL,
+    prescription_date date NOT NULL,
+    prescription_number character varying,
+    notes text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: prescriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.prescriptions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: prescriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.prescriptions_id_seq OWNED BY public.prescriptions.id;
+
+
+--
+-- Name: sale_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sale_items (
+    id integer NOT NULL,
+    sale_id integer NOT NULL,
+    medicine_id integer NOT NULL,
+    quantity integer NOT NULL,
+    mrp numeric(10,2) NOT NULL,
+    selling_price numeric(10,2) NOT NULL,
+    discount numeric(10,2) NOT NULL,
+    total_price numeric(10,2) NOT NULL
+);
+
+
+--
+-- Name: sale_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.sale_items_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sale_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.sale_items_id_seq OWNED BY public.sale_items.id;
+
+
+--
+-- Name: sales; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sales (
+    id integer NOT NULL,
+    invoice_number character varying NOT NULL,
+    customer_name character varying,
+    subtotal numeric(10,2) NOT NULL,
+    discount numeric(10,2) NOT NULL,
+    total_amount numeric(10,2) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    customer_phone character varying,
+    customer_address text
+);
+
+
+--
+-- Name: sales_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.sales_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sales_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.sales_id_seq OWNED BY public.sales.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    full_name character varying NOT NULL,
+    email character varying NOT NULL,
+    phone_number character varying NOT NULL,
+    hashed_password character varying NOT NULL,
+    role character varying NOT NULL,
+    is_active boolean,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: categories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.categories_id_seq'::regclass);
+
+
+--
+-- Name: medicines id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.medicines ALTER COLUMN id SET DEFAULT nextval('public.medicines_id_seq'::regclass);
+
+
+--
+-- Name: prescriptions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prescriptions ALTER COLUMN id SET DEFAULT nextval('public.prescriptions_id_seq'::regclass);
+
+
+--
+-- Name: sale_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sale_items ALTER COLUMN id SET DEFAULT nextval('public.sale_items_id_seq'::regclass);
+
+
+--
+-- Name: sales id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sales ALTER COLUMN id SET DEFAULT nextval('public.sales_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.alembic_version (version_num) FROM stdin;
+5260f1a1c2ff
+\.
+
+
+--
+-- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.categories (id, name, description, created_at, updated_at, is_active) FROM stdin;
+1	Capsule	Updated description	2026-07-04 08:14:15.189546	2026-07-04 08:22:08.905916	f
+2	Antibiotic	Medicines used to treat bacterial infections	2026-08-26 19:00:11.707539	2026-08-26 19:00:11.707543	t
+3	Painkiller	Medicines used to relieve pain	2026-08-26 19:00:11.707544	2026-08-26 19:00:11.707544	t
+4	Antacid	Medicines used for acidity and stomach discomfort	2026-08-26 19:00:11.707547	2026-08-26 19:00:11.707547	t
+5	Vitamin & Supplement	Vitamins, minerals and nutritional supplements	2026-08-26 19:00:11.707548	2026-08-26 19:00:11.707548	t
+6	Diabetes	Medicines used for diabetes management	2026-08-26 19:00:11.707549	2026-08-26 19:00:11.707549	t
+7	Blood Pressure	Medicines used for blood pressure management	2026-08-26 19:00:11.70755	2026-08-26 19:00:11.70755	t
+8	Cardiac	Medicines related to heart and cardiovascular conditions	2026-08-26 19:00:11.707551	2026-08-26 19:00:11.707551	t
+10	Cold & Cough	Medicines used for cold, cough and related symptoms	2026-08-26 19:00:11.707552	2026-08-26 19:00:11.707552	t
+11	Skin Care	Medicines and products for skin conditions	2026-08-26 19:00:11.707553	2026-08-26 19:00:11.707553	t
+12	Eye Care	Medicines and products for eye conditions	2026-08-26 19:00:11.707553	2026-08-26 19:00:11.707554	t
+13	Other	Other medicines that do not fit another category	2026-08-26 19:00:11.707554	2026-08-26 19:00:11.707554	t
+14	Capsuleff	Updated description	2026-08-29 16:25:35.196891	2026-08-29 16:27:58.63053	t
+15	ghtnf	nflonm	2026-08-29 16:30:51.586698	2026-08-29 16:30:51.5867	t
+9	Allergy	Medicines used for allergies	2026-08-26 19:00:11.707551	2026-08-30 16:22:56.734216	f
+\.
+
+
+--
+-- Data for Name: medicines; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.medicines (id, name, generic_name, brand_name, category_id, batch_number, expiry_date, mrp, purchase_price, selling_price, stock_quantity, minimum_stock, schedule_type, created_at, updated_at, is_active, medicine_type, drawer) FROM stdin;
+9	Cetirizine 10mg	Cetirizine Hydrochloride	Cipla	1	001	2026-09-03	999.97	900.00	949.97	177	10	OTC	2026-08-26 18:08:07.939072	2026-08-29 10:40:43.886757	t	Tablet	A1
+3	Azithromycin 500	Azithromycin	Azithral	1	AZ500B2026	2028-10-31	119.00	75.00	110.00	31	10	H	2026-08-07 17:35:29.705637	2026-08-29 10:42:15.604587	t	Tablet	A
+2	Paracetamol 650	Paracetamol	Dolo	1	A1001	2028-12-31	35.00	20.00	32.00	57	20	OTC	2026-08-07 17:32:57.935139	2026-09-04 16:42:35.79177	t	Tablet	A
+11	testeea 111	delata	Cipla	8	01101	2028-11-22	899.00	600.00	800.00	98	10	H1	2026-09-05 13:03:40.817377	2026-09-05 13:48:17.735119	t	Tablet	b1
+1	Paracetamol 650	Paracetamol	Dolo	1	A1001	2028-12-31	35.00	20.00	34.00	120	20	OTC	2026-08-07 17:15:49.970545	2026-08-07 17:22:41.646132	f	Tablet	A
+5	Okamat 500	Matformin 500	Cipla	1	001	2029-09-20	29.00	15.00	21.00	0	11	OTC	2026-08-08 05:55:41.629109	2026-08-08 05:56:24.923213	t	Tablet	A
+8	Cetirizine 120mg	Cetirizine Hydrochloride	Cipla	1	002	2028-02-22	25.00	16.00	20.00	100	10	OTC	2026-08-22 11:27:46.154707	2026-08-22 11:27:46.154712	t	Tablet	A1
+4	Cetirizine 10mg	Cetirizine Hydrochloride	Cipla	1	CTZ10C2503	2029-09-09	100.00	60.00	90.00	95	10	OTC	2026-08-07 19:28:18.11737	2026-08-22 11:29:02.05491	t	Tablet	A
+6	Pantop 40	Pantoprazole	Aristo Pharmaceuticals	1	001	2027-11-26	100.00	70.00	80.00	58	5	OTC	2026-08-21 17:55:45.184426	2026-08-28 09:18:03.051749	t	Tablet	A
+7	Crocin	Paracetamol	Cipla	1	CROC001	2027-12-31	30.00	20.00	28.00	49	10	OTC	2026-08-21 20:56:26.788466	2026-08-28 15:03:44.018628	t	Tablet	A
+10	Cetirizine 10mg	Cetirizine Hydrochloride	Cipla	9	003	2026-09-01	100.00	60.00	80.00	59	10	OTC	2026-08-28 15:10:02.122323	2026-08-28 15:13:37.924202	t	Tablet	A1
+\.
+
+
+--
+-- Data for Name: prescriptions; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.prescriptions (id, sale_id, customer_name, customer_phone, customer_address, doctor_name, doctor_address, prescription_date, prescription_number, notes, created_at, updated_at) FROM stdin;
+1	20	priyanka	9999999999	C/7 PANCHVATI CHAWL,SHIVAJI CHAWK	dr roshan	sanjayclinic	2026-09-05	\N	\N	2026-09-05 13:46:33.141275	2026-09-05 13:46:33.141277
+2	21	delta 1	9999999999	C/7 PANCHVATI CHAWL,SHIVAJI CHAWK	dr roshan yadav	C/7 PANCHVATI CHAWL,SHIVAJI CHAWK	2026-09-05	\N	\N	2026-09-05 13:48:17.744265	2026-09-05 13:48:17.744269
+\.
+
+
+--
+-- Data for Name: sale_items; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.sale_items (id, sale_id, medicine_id, quantity, mrp, selling_price, discount, total_price) FROM stdin;
+1	1	6	2	100.00	80.00	2.00	158.00
+2	2	2	1	35.00	32.00	3.50	28.50
+3	2	7	1	30.00	28.00	3.00	25.00
+4	3	10	1	100.00	80.00	25.00	55.00
+5	3	2	1	35.00	32.00	2.45	29.55
+6	4	2	1	35.00	32.00	3.00	29.00
+7	5	3	1	119.00	110.00	9.00	101.00
+8	6	2	1	35.00	32.00	3.00	29.00
+9	7	3	1	119.00	110.00	9.00	101.00
+10	8	2	1	35.00	32.00	0.00	32.00
+11	9	2	1	35.00	32.00	0.00	32.00
+12	9	3	1	119.00	110.00	0.00	110.00
+13	10	2	1	35.00	32.00	0.00	32.00
+14	11	2	1	35.00	32.00	0.00	32.00
+15	12	3	1	119.00	110.00	0.00	110.00
+16	13	2	1	35.00	32.00	0.00	32.00
+17	14	2	1	35.00	32.00	0.00	32.00
+18	15	9	1	999.97	949.97	0.00	949.97
+19	16	3	1	119.00	110.00	0.00	110.00
+20	17	2	1	35.00	32.00	0.00	32.00
+21	18	2	1	35.00	32.00	0.00	32.00
+22	19	2	1	35.00	32.00	0.00	32.00
+23	20	11	1	899.00	800.00	0.00	800.00
+24	21	11	1	899.00	800.00	0.00	800.00
+\.
+
+
+--
+-- Data for Name: sales; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.sales (id, invoice_number, customer_name, subtotal, discount, total_amount, created_at, updated_at, customer_phone, customer_address) FROM stdin;
+1	INV-000001	Test Customer	158.00	0.00	158.00	2026-08-28 09:18:03.056933	2026-08-28 09:18:03.056934	\N	\N
+2	INV-000002	\N	53.50	0.00	53.50	2026-08-28 15:03:44.02457	2026-08-28 15:03:44.024572	\N	\N
+3	INV-000003	\N	84.55	0.00	84.55	2026-08-28 15:13:37.927267	2026-08-28 15:13:37.927268	\N	\N
+4	INV-000004	\N	29.00	0.00	29.00	2026-08-28 16:16:04.116892	2026-08-28 16:16:04.116894	\N	\N
+5	INV-000005	\N	101.00	0.00	101.00	2026-08-28 16:19:36.442196	2026-08-28 16:19:36.442197	\N	\N
+6	INV-000006	\N	29.00	0.00	29.00	2026-08-28 16:35:49.327065	2026-08-28 16:35:49.327067	\N	\N
+7	INV-000007	\N	101.00	0.00	101.00	2026-08-28 16:36:33.71328	2026-08-28 16:36:33.713281	\N	\N
+8	INV-000008	\N	32.00	0.00	32.00	2026-08-28 16:46:09.070406	2026-08-28 16:46:09.070407	\N	\N
+9	INV-000009	\N	142.00	0.00	142.00	2026-08-28 16:47:48.581917	2026-08-28 16:47:48.58192	\N	\N
+10	INV-000010	\N	32.00	0.00	32.00	2026-08-28 16:49:47.465388	2026-08-28 16:49:47.465393	\N	\N
+11	INV-000011	\N	32.00	0.00	32.00	2026-08-28 17:02:58.458102	2026-08-28 17:02:58.458104	\N	\N
+12	INV-000012	nana	110.00	0.00	110.00	2026-08-28 18:43:02.047514	2026-08-28 18:43:02.047518	\N	\N
+13	INV-000013	\N	32.00	10.00	22.00	2026-08-28 18:43:35.834979	2026-08-28 18:43:35.834982	\N	\N
+14	INV-000014	\N	32.00	0.00	32.00	2026-08-29 10:33:09.127814	2026-08-29 10:33:09.127818	\N	\N
+15	INV-000015	\N	949.97	0.00	949.97	2026-08-29 10:40:43.894732	2026-08-29 10:40:43.894736	\N	\N
+16	INV-000016	\N	110.00	0.00	110.00	2026-08-29 10:42:15.606463	2026-08-29 10:42:15.606465	\N	\N
+17	INV-000017	\N	32.00	0.00	32.00	2026-08-29 18:08:55.57185	2026-08-29 18:08:55.571852	\N	\N
+18	INV-000018	\N	32.00	0.00	32.00	2026-09-03 18:30:29.030172	2026-09-03 18:30:29.030174	\N	\N
+19	INV-000019	\N	32.00	0.00	32.00	2026-09-04 16:42:35.799665	2026-09-04 16:42:35.799667	\N	\N
+20	INV-000020	priyanka	800.00	0.00	800.00	2026-09-05 13:46:33.136422	2026-09-05 13:46:33.136426	9999999999	C/7 PANCHVATI CHAWL,SHIVAJI CHAWK
+21	INV-000021	delta 1	800.00	0.00	800.00	2026-09-05 13:48:17.740363	2026-09-05 13:48:17.740368	9999999999	C/7 PANCHVATI CHAWL,SHIVAJI CHAWK
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.users (id, full_name, email, phone_number, hashed_password, role, is_active, created_at, updated_at) FROM stdin;
+3	Mahendra Yadav	msy192000@gmail.com	7387906926	$2b$12$O4CKlesoAKObIAigL/Llmu4fRIReEPOIWNj1PSxKIl.MrrpEik7.2	admin	t	2026-07-04 08:12:34.023098	2026-07-04 08:12:34.023103
+6	rajat	rajat@gmaiil.com	8980979869	$2b$12$4ihbRclM5JTcXoFP8S5m2..zSn9Vdzz4k1XoNJYRqrTJaOClwbjre	staff	t	2026-09-01 19:10:23.791518	2026-09-01 19:13:49.44491
+5	Test Manager	testmanager@example.com	8888888888	$2b$12$FIK1NBoxU2BYXvmT8a/x6ujtf56kdRaOEDW54tIkKTg8NtBa6h5Gu	manager	t	2026-09-01 18:58:26.86418	2026-09-02 18:57:28.536718
+8	Registration Test	registrationtest@example.com	9999999999	$2b$12$Wrl3L5jiAhdSleFNuIFU4.3teIkgfJoDky93elVKXr7I2y8Zt6UOK	staff	t	2026-09-02 18:43:22.649085	2026-09-02 19:12:49.041321
+4	Priyanka Yadav	yadav9324842535@gmail.com	8828730335	$2b$12$NoNNrWx5T0qtzOp39ZCLqeEYy1WJoCTSVfmmqZ490cSnMdH1CUvYe	manager	t	2026-08-30 17:19:40.374154	2026-09-04 16:40:22.825359
+\.
+
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.categories_id_seq', 15, true);
+
+
+--
+-- Name: medicines_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.medicines_id_seq', 11, true);
+
+
+--
+-- Name: prescriptions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.prescriptions_id_seq', 2, true);
+
+
+--
+-- Name: sale_items_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.sale_items_id_seq', 24, true);
+
+
+--
+-- Name: sales_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.sales_id_seq', 21, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 8, true);
+
+
+--
+-- Name: alembic_version alembic_version_pkc; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.alembic_version
+    ADD CONSTRAINT alembic_version_pkc PRIMARY KEY (version_num);
+
+
+--
+-- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.categories
+    ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: medicines medicines_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.medicines
+    ADD CONSTRAINT medicines_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: prescriptions prescriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prescriptions
+    ADD CONSTRAINT prescriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: prescriptions prescriptions_sale_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prescriptions
+    ADD CONSTRAINT prescriptions_sale_id_key UNIQUE (sale_id);
+
+
+--
+-- Name: sale_items sale_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sale_items
+    ADD CONSTRAINT sale_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sales sales_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sales
+    ADD CONSTRAINT sales_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_email_key UNIQUE (email);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ix_categories_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ix_categories_id ON public.categories USING btree (id);
+
+
+--
+-- Name: ix_categories_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX ix_categories_name ON public.categories USING btree (name);
+
+
+--
+-- Name: ix_medicines_generic_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ix_medicines_generic_name ON public.medicines USING btree (generic_name);
+
+
+--
+-- Name: ix_medicines_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ix_medicines_id ON public.medicines USING btree (id);
+
+
+--
+-- Name: ix_medicines_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ix_medicines_name ON public.medicines USING btree (name);
+
+
+--
+-- Name: ix_prescriptions_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ix_prescriptions_id ON public.prescriptions USING btree (id);
+
+
+--
+-- Name: ix_sale_items_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ix_sale_items_id ON public.sale_items USING btree (id);
+
+
+--
+-- Name: ix_sales_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ix_sales_id ON public.sales USING btree (id);
+
+
+--
+-- Name: ix_sales_invoice_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX ix_sales_invoice_number ON public.sales USING btree (invoice_number);
+
+
+--
+-- Name: ix_users_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ix_users_id ON public.users USING btree (id);
+
+
+--
+-- Name: medicines medicines_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.medicines
+    ADD CONSTRAINT medicines_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.categories(id);
+
+
+--
+-- Name: prescriptions prescriptions_sale_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.prescriptions
+    ADD CONSTRAINT prescriptions_sale_id_fkey FOREIGN KEY (sale_id) REFERENCES public.sales(id);
+
+
+--
+-- Name: sale_items sale_items_medicine_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sale_items
+    ADD CONSTRAINT sale_items_medicine_id_fkey FOREIGN KEY (medicine_id) REFERENCES public.medicines(id);
+
+
+--
+-- Name: sale_items sale_items_sale_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sale_items
+    ADD CONSTRAINT sale_items_sale_id_fkey FOREIGN KEY (sale_id) REFERENCES public.sales(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict pmWfVCttuICbPOoFQFEzOgyzUr30cFfLyG54jWuwyTx8bIa6rZyeZVyRTEacYo0
+
+‹Ÿjÿnovacare_backup_20260908_003555.sql          

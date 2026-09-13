@@ -5,6 +5,7 @@ from app.api.v1.categories import router as categories_router
 from app.api.v1.medicines import router as medicines_router
 from app.api.v1.sales import router as sales_router
 from app.api.v1.users import router as users_router
+from app.api.v1.backup import router as backup_router
 
 
 app = FastAPI(
@@ -49,4 +50,10 @@ app.include_router(
     sales_router,
     prefix="/api/v1/sales",
     tags=["Sales"],
+)
+
+app.include_router(
+    backup_router,
+    prefix="/api/v1/backup",
+    tags=["Backup"],
 )
